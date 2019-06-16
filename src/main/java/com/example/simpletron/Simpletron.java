@@ -45,6 +45,7 @@ public class Simpletron {
         printWelcomeMessage();
         loadToMemory();
         executeMachineCode();
+        printDump();
     }
 
     private void printWelcomeMessage() {
@@ -158,5 +159,49 @@ public class Simpletron {
             }
             instructionCounter++;
         }
+    }
+
+    private void printDump() {
+        printRegisters();
+        System.out.println("MEMORY:");
+        System.out.printf("%3s", "");
+        for (int c = 0; c < 10; c++) {
+            System.out.printf("%8d", c);
+        }
+        for (int i = 0; i < 100; i++) {
+            if (i % 10 == 0) {
+                System.out.println();
+                System.out.printf("%3d", i);
+            }
+            System.out.printf("%8s", formatInteger(memory[i], 4, true));
+        }
+        System.out.println();
+    }
+
+    private void printRegisters() {
+        System.out.println();
+        System.out.println("REGISTERS:");
+        System.out.printf("%-30s%5s\n", "accumulator", formatInteger(accumulator, 4, true));
+        System.out.printf("%-30s%5s\n", "instructionCounter", formatInteger(instructionCounter, 2, false));
+        System.out.printf("%-30s%5s\n", "instructionRegister", formatInteger(instructionRegister, 4, true));
+        System.out.printf("%-30s%5s\n", "operationCode", formatInteger(operationCode, 2, false));
+        System.out.printf("%-30s%5s\n", "operand", formatInteger(operand, 2, false));
+        System.out.println();
+    }
+
+    private String formatInteger(int word, int length, boolean includeSign) {
+        String sign = includeSign ? word < 0 ? "-" : "+" : "";
+        String wordString = Integer.toString(word);
+        int diff = length - wordString.length();
+
+        if (diff == 0)
+            return sign + wordString;
+        else if (diff == 1)
+            return sign + "0" + wordString;
+        else if (diff == 2)
+            return sign + "00" + wordString;
+        else if (diff == 3)
+            return sign + "000" + wordString;
+        return sign + wordString;
     }
 }
